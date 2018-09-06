@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //imports
 console.log('routes.js loaded');
 var express = require('express');
@@ -43,8 +43,8 @@ router.get('/person/:start/:end',function(req,res,next){
   console.log("Server Started on Port 3000");
 }); */
 module.exports = router;
-=======
-//imports
+/*=======
+imports
 var express = require('express');
 var mongojs = require('mongojs');
 var router = express.Router();
@@ -105,4 +105,5 @@ router.get('/con/:con',function(req,res,next){
   })
 })
 module.exports = router;
->>>>>>> 0fddccd4dcad2b3bfb52a268dbfe8acc2f0d645d
+>>>>>>> 0fddccd4dcad2b3bfb52a268dbfe8acc2f0d645d*/
+
