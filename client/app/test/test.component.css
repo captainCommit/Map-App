@@ -1,0 +1,22 @@
+.form{
+  float:left;
+  width:350px;
+  height:235px;
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+.input{
+  margin-top:15px;
+}
+mat-slider {
+  margin-top:25px;
+  width: 300px;
+}
+#mapid{
+  float:left;
+  width:900px;
+  height:500px;
+  margin-left:25px;
+  border-radius:5px;
+}
