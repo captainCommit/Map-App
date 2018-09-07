@@ -21,6 +21,11 @@ const appRoutes: Routes = [
     path: 'filter',
     component : TestComponent,
     data: {title : 'Map-App'}
+  },
+  {
+    path: 'tag',
+    component: TagComponent,
+    data: {title : 'Map-App'}
   }
 ];
 @NgModule({

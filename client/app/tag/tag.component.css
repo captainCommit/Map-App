@@ -1,0 +1,44 @@
+.form{
+  float:left;
+  width:300px;
+  height:185px;
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+.input{
+  margin-top:15px;
+}
+.result{
+  float:left;
+  width:900px;
+  height:500px;
+  margin-left:55px;
+  border-radius:5px;
+}
+#mapid{
+  margin-top:15px;
+  float:left;
+  width:900px;
+  height:500px;
+  margin-left:25px;
+  border-radius:5px;
+  margin-bottom:25px;
+  border: 1.5px solid;
+  visibility: hidden;
+}
+a{
+    cursor: pointer;
+}
+a:hover{
+  cursor: pointer;
+}
+.result-data{
+  width:200px;
+  height:380px;
+  float:left;
+  margin:10px 10px;
+  -webkit-box-shadow: 9px 11px 21px -1px rgba(0,0,0,0.76);
+  -moz-box-shadow: 9px 11px 21px -1px rgba(0,0,0,0.76);
+  box-shadow: 9px 11px 21px -1px rgba(0,0,0,0.76);
+}

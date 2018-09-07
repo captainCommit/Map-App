@@ -12,16 +12,14 @@
    </div>
    <div class="collapse navbar-collapse" id="navigationbar">
       <ul class="nav navbar-nav">
+          <li><a [routerLink] ="['/']" >Search By Date</a></li>
           <li><a [routerLink] ="['/filter']" >Filter By Date</a></li>
-          <li><a href="#">Lorem</a></li>
-          <li><a href="#">Lorem</a></li>
-          <li><a href="#">Lorem</a></li>
-          <li><a href="#">Lorem</a></li>
+          <li><a [routerLink] = "['/tag']">Geotag Data</a></li>
       </ul>
    </div><!-- /.navbar-collapse -->
  </div><!-- /.container-fluid -->
 </nav>
-<div style="text-align:center">
+<div style="text-align:center;margin-top:25px;">
   <h1>
     Welcome to {{ title }} !
   </h1>

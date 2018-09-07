@@ -9,10 +9,19 @@
 .input{
   margin-top:15px;
 }
+a{
+    cursor: pointer;
+}
+a:hover{
+  cursor: pointer;
+}
 #mapid{
+  margin-top:15px;
   float:left;
   width:900px;
   height:500px;
   margin-left:25px;
   border-radius:5px;
+  margin-bottom:25px;
+  border: 1.5px solid;
 }

@@ -1,6 +1,6 @@
 <form [formGroup]="pageForm" class = "well form" (ngSubmit)="onSubmit()">
     <input type="text" class="form-control input" formControlName="name" placeholder="Enter Name ">
-    <input type="text" class="form-control input" formControlName="con" placeholder="Enter Country">
+    <input type="text" class="form-control input" (keypress)="keyPress($event)" formControlName="con" placeholder="Enter Country">
     <mat-slider thumbLabel tickInterval="1" min="1969" max="2019" (input)="onChange($event)"></mat-slider>
     <input type="submit" class="btn btn-primary" value="Submit" style="float:right">
 </form>
