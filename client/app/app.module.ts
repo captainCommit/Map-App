@@ -9,6 +9,7 @@ import {MatSliderModule} from '@angular/material/slider'
 import { AppComponent } from './app.component';
 import { PageComponent } from './page/page.component';
 import { TestComponent } from './test/test.component';
+import { TagComponent } from './tag/tag.component';
 
 const appRoutes: Routes = [
   {
@@ -26,7 +27,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     PageComponent,
-    TestComponent
+    TestComponent,
+    TagComponent
   ],
   imports: [
     BrowserModule,
