@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,OnInit} from '@angular/core';
 import {FormGroup,FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import L from "leaflet";
+
+import { DataService } from "../data.service";
+
 //leaflet import
 declare let L;
 var mymap;
@@ -11,23 +14,34 @@ var markers = new Array();
 @Component({
   selector: 'page',
   templateUrl: './page.component.html',
-  styleUrls: ['./page.component.css']
+  styleUrls: ['./page.component.css'],
 })
-export class PageComponent implements OnInit {
+export class PageComponent implements OnInit
+{
   //map data
-  //person array
-  persons :any;
+  //person arrau
+  persons: any;
   location :any[]= [];
+  message : any[];
   //form data
   pageForm = new FormGroup({
     name: new FormControl(''),
     con: new FormControl(''),
     year: new FormControl('')
   });
-  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient) { }
+  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient,private data : DataService)
+  {
+    this.data.userDataSource.subscribe(res => {this.persons = res},err =>{console.log(err)})
+  }
+  ngOnInit()
+  {
+  }
+  change(event)
+  {
+  }
   onSubmit()
   {
-      var query;
+      /*var query;
       var name = this.pageForm.value.name;
       var con = this.pageForm.value.con;
       var year = this.pageForm.value.year;
@@ -74,12 +88,7 @@ export class PageComponent implements OnInit {
         (err)=>
         {
           console.log(err)
-        });
-  }
-  ngOnInit()
-  {
-    //Declaring MAP
-    this.buildmap();
+        });*/
   }
    //Add Marker to map
   buildmap()

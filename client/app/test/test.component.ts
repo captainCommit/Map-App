@@ -4,11 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import {MatSliderModule} from '@angular/material/slider'
 import L from "leaflet";
+import { DataService } from '../data.service';
 //leaflet import
 declare let L;
 var mymap;
 var markers = new Array();
-
 @Component({
   selector: 'test',
   templateUrl: './test.component.html',
@@ -25,65 +25,40 @@ export class TestComponent implements OnInit {
     name: new FormControl(''),
     con: new FormControl('')
   });
-  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient) { }
-  onChange(event) {
-    this.value = event.value;
-  }
-  onSubmit()
+  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient,private data1 : DataService)
   {
-      var query;
-      var name = this.pageForm.value.name;
-      var con = this.pageForm.value.con;
-      var year = this.value+"";
-      if(name == "" && con == "" && year =="")
-        query="?";
-      else if(year == "" && name == "")
-          query="?con="+con;
-      else if(year == "" && con == "")
-          query="?name="+name;
-      else if(name == "" && con == "")
-          query="?year="+year;
-      else if(name == "")
-          query= "?con="+con+"&year="+year;
-      else if(con == "")
-          query= "?name="+name+"&year="+year;
-      else if(year == "")
-          query= "?con="+con+"&name="+name;
-      else
-          query="?name="+name+"&con="+con+"&year="+year;
-        console.log(query);
-        this.http.get('/person'+query).subscribe(res =>
-        {
-            this.persons =res;
-            markers = []
-            console.log(this.persons);
-            this.location=[];
-            if(markers)
-              mymap.removeLayer(markers);
-            if(mymap!=undefined)
-                mymap.remove();
-            this.buildmap();
-            for(var i =0;i < this.persons.length;i++)
-            {
-                this.location.push([this.persons[i].name, this.persons[i].lat ,this.persons[i].long]);
-            }
-            for(var i = 0;i < this.location.length ; i++)
-            {
-                var x = this.location[i][1]+"";
-                var y = this.location[i][2]+"";
-                markers.push(new L.marker([x,y]).bindPopup(this.location[i][0]).addTo(mymap));
-            }
-            console.log(markers);
-        },
-        (err)=>
-        {
-          console.log(err)
-        });
+    this.data1.userDataSource.subscribe(res => {
+      this.persons = res;
+      console.log(this.persons);
+    },err =>{console.log(err)})
   }
   ngOnInit()
   {
     //Declaring MAP
     this.buildmap();
+    this.data1.userDataSource.subscribe(res => {
+      this.persons = res;
+      console.log(this.persons)
+      this.location=[];
+      markers = [];
+      if(markers)
+        mymap.removeLayer(markers);
+      if(mymap!=undefined)
+          mymap.remove();
+      this.buildmap();
+      for(var i =0;i < this.persons.length;i++)
+      {
+          this.location.push([this.persons[i].name, this.persons[i].lat ,this.persons[i].long]);
+      }
+      for(var i = 0;i < this.location.length ; i++)
+      {
+          var x = this.location[i][1]+"";
+          var y = this.location[i][2]+"";
+          markers.push(new L.marker([x,y]).bindPopup(this.location[i][0]).addTo(mymap));
+      }
+      console.log(markers);
+    },err =>{console.log(err)})
+    console.log("Map Init");
   }
    //Add Marker to map
   buildmap()

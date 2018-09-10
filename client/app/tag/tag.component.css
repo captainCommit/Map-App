@@ -1,4 +1,4 @@
-.form{
+/*.form{
   float:left;
   width:300px;
   height:185px;
@@ -15,17 +15,13 @@
   height:500px;
   margin-left:55px;
   border-radius:5px;
+}*/
+.result{
+  overflow:scroll;
 }
 #mapid{
-  margin-top:15px;
-  float:left;
   width:900px;
   height:500px;
-  margin-left:25px;
-  border-radius:5px;
-  margin-bottom:25px;
-  border: 1.5px solid;
-  visibility: hidden;
 }
 a{
     cursor: pointer;

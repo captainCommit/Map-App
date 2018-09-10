@@ -2,18 +2,27 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule}   from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes,Router } from '@angular/router';
 import {MatSliderModule} from '@angular/material/slider'
+import {MatTabsModule} from '@angular/material/tabs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 import { AppComponent } from './app.component';
 import { PageComponent } from './page/page.component';
 import { TestComponent } from './test/test.component';
 import { TagComponent } from './tag/tag.component';
+import {TextComponent} from './text/text.component';
 
+import {DataService} from './data.service';
 const appRoutes: Routes = [
   {
-    path: '',
+    path:'',
+    component:TextComponent,
+    data: {title: 'Map-App'}
+  },
+  {
+    path: 'gallery',
     component: PageComponent,
     data: { title: 'Map-App' }
   },
@@ -33,19 +42,22 @@ const appRoutes: Routes = [
     AppComponent,
     PageComponent,
     TestComponent,
-    TagComponent
+    TagComponent,
+    TextComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
     MatSliderModule,
+    MatTabsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

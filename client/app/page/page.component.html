@@ -1,7 +1,21 @@
-<form [formGroup]="pageForm" class = "well form" (ngSubmit)="onSubmit()">
+<!--form [formGroup]="pageForm" class = "well form" (ngSubmit)="onSubmit()">
     <input type="text" class="form-control input" formControlName="name" placeholder="Enter Name ">
     <input type="text" class="form-control input" formControlName="con" placeholder="Enter Country">
     <input type="text" class="form-control input" formControlName="year" placeholder="Enter Year" >
     <input type="submit" class="form-control input" style="visibility:hidden">
-</form>
-<div id="mapid"></div>
+</form-->
+<div class="card bg-info result-data " *ngFor = "let person of persons">
+  <div class="view-overlay">
+    <img class="card-img-top bordered img-thumbnail img-responsive" src="assets\img\AVATAR.png" height=200 width=180 style="margin:10px;" alt="Card image cap">
+  </div>
+  <div class="card-body">
+    <h4 class="card-title"><strong>{{person.name}}</strong></h4>
+    <p class="card-text">
+      Year : {{person.year}} &nbsp;&nbsp;&nbsp;&nbsp;
+      <br>Country : {{person.con}}
+      <br>Location : ({{person.lat}}&nbsp;,&nbsp;{{person.long}})
+      <br><a>View In Map</a>
+    </p>
+    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+  </div>
+</div>

@@ -12,9 +12,9 @@
    </div>
    <div class="collapse navbar-collapse" id="navigationbar">
       <ul class="nav navbar-nav">
-          <li><a [routerLink] ="['/']" >Search By Date</a></li>
-          <li><a [routerLink] ="['/filter']" >Filter By Date</a></li>
-          <li><a [routerLink] = "['/tag']">Geotag Data</a></li>
+          <li><a>Search By Date</a></li>
+          <li><a>Filter By Date</a></li>
+          <li><a>Geotag Data</a></li>
       </ul>
    </div><!-- /.navbar-collapse -->
  </div><!-- /.container-fluid -->
@@ -23,8 +23,30 @@
   <h1>
     Welcome to {{ title }} !
   </h1>
-  <!--page></page-->
-  <router-outlet></router-outlet>
+  <form [formGroup]="pageForm" class = "well form" (ngSubmit)="onSubmit()">
+      <input type="text" class="form-control input" formControlName="name" placeholder="Enter Name ">
+      <input type="text" class="form-control input" formControlName="con" placeholder="Enter Country">
+      <input type="text" class="form-control input" formControlName="year" placeholder="Enter Year" >
+      <input type="submit" class="form-control input" style="visibility:hidden">
+  </form>
+  <div class="window">
+    <div class="menubar" style="position:relative">
+      <nav mat-tab-nav-bar>
+        <a mat-tab-link class
+        *ngFor="let link of routeLinks"
+        [routerLink]="link.path"
+        routerLinkActive="mat-tab-link-active" #rla="routerLinkActive"
+        [active]="rla.isActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        >
+        {{link.label}}
+      </a>
+      </nav>
+    </div>
+      <div class="result">
+          <router-outlet></router-outlet>
+      <div>
+  </div>
 </div>
 <!--h2>Here are some links to help you start: </h2>
 <ul>\]7
