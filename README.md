@@ -1,15 +1,28 @@
 # MapApp
+A lightweight application on the Mean Stack to view spatial and temporal variations of fauna all over India.
 
-This project was generated with MongoDB , ExpressJs, Angular 6 and NodeJS.
-
-## Development server
-
+## Development server for UI (Angular)
 Run ng serve --open
 Browser will open at https://localhost:4200/
 
-## Production
+## Description
 
-TO RUN THE APP
+This application currently works on dummy data to find various people over the Earth that existed in a given time period.
+However the main objective is to find the state-wise distribution of various fauna all over India, and provide the user with
+data about the data collected in the wild by researchers. Moreover future updates will include a state specific search of various species and finally a taxonomical search on the basis of phylum genus species and order of animals all over India.
+This project will also have mobile version.
 
-RUN NPM INSTALL
-RUN NPM START
+## Requirements
+The map used in the application is Leaflet version - latest at the time of development of application
+
+## Data File
+DataSep3-2018.json
+
+## Import Database
+mongoimport --jsonArray --db mapdb --collection data --file <path to filename>
+
+## To Run the App
+Open Browser at http://localhost:3000/
+
+1.  RUN NPM INSTALL
+2.  RUN NPM START
