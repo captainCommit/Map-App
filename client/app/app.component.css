@@ -1,38 +1,38 @@
+a{
+  text-decoration: none;
+}
+a : hover{
+  cursor: pointer;
+  text-decoration: none;
+}
 .form{
-  float:left;
-  width:350px;
-  height:200px;
-  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
-  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  position:absolute;
+  right:1%;
+  margin-right:-10px;
+  margin-top:55px;
+  z-index:999;
+  width:250px;
 }
 .input{
-  margin-top:15px;
+  margin-top:5px;
 }
 .window{
-  float:left;
   margin-top:0px;
-  margin-left:0px;
-  height:505px;
-  width:905px;
-  border-radius:5px;
-  margin-bottom:25px;
-  margin-left:25px;
+  height:100%;
+  width:102.2%;
+  margin-right:-15px;
+  margin-left: -15px;
   margin-top:0px;
-  border:1px solid;
 }
 .result{
   margin-top:0px;
-  height:454px;
-  overflow: scroll;
+  height:100%;
+  width:100%;
+  overflow: auto;
 }
 .menubar{
   position:absolute;
 
-}
-mat-slider {
-  margin-top:25px;
-  width: 300px;
 }
 a{
     cursor: pointer;

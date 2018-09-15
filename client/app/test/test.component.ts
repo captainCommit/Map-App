@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {FormGroup,FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import {MatSliderModule} from '@angular/material/slider'
+import {MatSliderModule} from '@angular/material/slider';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import L from "leaflet";
 import { DataService } from '../data.service';
 //leaflet import
@@ -18,13 +19,9 @@ export class TestComponent implements OnInit {
   //map data
   //person array
   persons :any;
-  location :any[]= [];
+  area:number;
+  bounds : any;
   value : number;
-  //form data
-  pageForm = new FormGroup({
-    name: new FormControl(''),
-    con: new FormControl('')
-  });
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient,private data1 : DataService)
   {
     this.data1.userDataSource.subscribe(res => {
@@ -32,10 +29,28 @@ export class TestComponent implements OnInit {
       console.log(this.persons);
     },err =>{console.log(err)})
   }
+  options = {
+    layers: [ L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
+    ],
+    zoom: 1,
+    center: L.latLng(0,0)
+};
+onChange(event)
+{
+    this.extent(event.target.getBounds());
+}
+extent(bounds : any)
+{
+    console.log(parseFloat(bounds._southWest.lng)+"   "+parseFloat(bounds._northEast.lng)+"   "+parseFloat(bounds._southWest.lat)+"   "+parseFloat(bounds._northEast.lat));
+    this.area = Math.abs(parseFloat(bounds._southWest.lng) - parseFloat(bounds._northEast.lng))*Math.abs(parseFloat(bounds._southWest.lat) - parseFloat(bounds._northEast.lat));
+    console.log(this.area);
+}
   ngOnInit()
   {
     //Declaring MAP
-    this.buildmap();
+    /*mymap.on('zoomend', function() {
+     alert(mymap.getBounds());
+    });
     this.data1.userDataSource.subscribe(res => {
       this.persons = res;
       console.log(this.persons)
@@ -58,20 +73,6 @@ export class TestComponent implements OnInit {
       }
       console.log(markers);
     },err =>{console.log(err)})
-    console.log("Map Init");
-  }
-   //Add Marker to map
-  buildmap()
-  {
-    mymap = L.map('mapid').setView([0,0], 1);
-    //Set Map-Layer
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-      maxZoom: 18,
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      id: 'mapbox.streets'
-    }).addTo(mymap);
-
+    console.log("Map Init");*/
   }
 }

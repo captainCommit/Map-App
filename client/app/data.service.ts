@@ -15,13 +15,7 @@ export class DataService {
   constructor(private http : HttpClient) { }
   sendData(query : string){
     this.query = query;
-    this.http.get('/person'+this.query).subscribe(res => {this.userDataSource.next(res);},err => {console.log(err);} );
+    this.http.get('/person'+this.query).subscribe(res => {console.log(res);this.userDataSource.next(res);},err => {console.log(err);} );
     console.log("Data Sent");
   }
-  getData()
-  {
-    console.log("Data Recieved");
-    return this.response;
-  }
-
 }

@@ -1,32 +1,185 @@
-import { Component, OnInit,EventEmitter,Input} from '@angular/core';
-import {FormGroup,FormControl } from '@angular/forms';
+import { Component, OnInit,Injectable,EventEmitter,Input} from '@angular/core';
+import {FormGroup,FormControl,FormsModule} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router,RouterModule } from '@angular/router';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { NouiFormatter } from "ng2-nouislider";
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatRadioModule} from '@angular/material/radio';
+import {CollectionViewer, SelectionChange} from '@angular/cdk/collections';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {MatTreeModule} from '@angular/material/tree';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
+import { BehaviorSubject,merge, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import {DataService} from './data.service';
+//Tree View  Setup
+export class DynamicFlatNode {
+  constructor(public item: string, public level = 1, public expandable = false,public state :string = "phylum",
+              public isLoading = false) {}
+}
+export class DynamicDatabase {
+  /*states : string[] = ["phylum","classes","orders","family","genus","subgenus","species","subspeices"]
+  rootLevelNodes: string[] = ["Mollusca","Cnidaria","Chordata","Arthropoda","Echinodermata","Cindaria","Porifera","Cnindaria","Platyhelminthes"];
+  constructor(private http : HttpClient)
+  {}
+  initialData() : DynamicFlatNode[]
+  {
+    return this.rootLevelNodes.map(name => new DynamicFlatNode(name,0,true,"phylum"));
+  }
+  getChildren(d : DynamicFlatNode) : string[] | undefined
+  {
+    var arr : string[];
+    var currState = this.states[this.states.findIndex((element : string,index : number , array :string[])=>{
+        if(element == d.state)
+          return true;
+        })+1];
+    this.http.get('/buildtree?state='+currState+"&name="+d.item).subscribe(res => arr);
+    if(arr == undefined)
+        return undefined;
+    else
+      return arr;
+  }
+  isExpandable(node : string) : boolean{
+    return true;}*/
+    dataMap = new Map<string, string[]>([
+        ['Fruits', ['Apple', 'Orange', 'Banana']],
+        ['Vegetables', ['Tomato', 'Potato', 'Onion']],
+        ['Apple', ['Fuji', 'Macintosh']],
+        ['Onion', ['Yellow', 'White', 'Purple']]
+      ]);
+
+      rootLevelNodes: string[] = ["Mollusca","Cnidaria","Chordata","Arthropoda","Echinodermata","Cindaria","Porifera","Cnindaria","Platyhelminthes"];
+
+      /** Initial data from database */
+      initialData(): DynamicFlatNode[] {
+        return this.rootLevelNodes.map(name => new DynamicFlatNode(name, 0, true));
+      }
+
+      getChildren(node: string): string[] | undefined {
+        return this.dataMap.get(node);
+      }
+
+      isExpandable(node: string): boolean {
+        return this.dataMap.has(node);
+      }
+}
+
+@Injectable()
+export class DynamicDataSource {
+
+  dataChange = new BehaviorSubject<DynamicFlatNode[]>([]);
+
+  get data(): DynamicFlatNode[] { return this.dataChange.value; }
+  set data(value: DynamicFlatNode[]) {
+    this.treeControl.dataNodes = value;
+    this.dataChange.next(value);
+  }
+
+  constructor(private treeControl: FlatTreeControl<DynamicFlatNode>,
+              private database: DynamicDatabase) {}
+
+  connect(collectionViewer: CollectionViewer): Observable<DynamicFlatNode[]> {
+    this.treeControl.expansionModel.onChange!.subscribe(change => {
+      if ((change as SelectionChange<DynamicFlatNode>).added ||
+        (change as SelectionChange<DynamicFlatNode>).removed) {
+        this.handleTreeControl(change as SelectionChange<DynamicFlatNode>);
+      }
+    });
+
+    return merge(collectionViewer.viewChange, this.dataChange).pipe(map(() => this.data));
+  }
+
+  /** Handle expand/collapse behaviors */
+  handleTreeControl(change: SelectionChange<DynamicFlatNode>) {
+    if (change.added) {
+      change.added.forEach(node => this.toggleNode(node, true));
+    }
+    if (change.removed) {
+      change.removed.slice().reverse().forEach(node => this.toggleNode(node, false));
+    }
+  }
+
+  /**
+   * Toggle the node, remove from display list
+   */
+  toggleNode(node: DynamicFlatNode, expand: boolean) {
+    const children = this.database.getChildren(node.item);
+    const index = this.data.indexOf(node);
+    if (!children || index < 0) { // If no children, or cannot find the node, no op
+      return;
+    }
+
+    node.isLoading = true;
+
+    setTimeout(() => {
+      if (expand) {
+        const nodes = children.map(name =>
+          new DynamicFlatNode(name, node.level + 1, this.database.isExpandable(name)));
+        this.data.splice(index + 1, 0, ...nodes);
+      } else {
+        let count = 0;
+        for (let i = index + 1; i < this.data.length
+          && this.data[i].level > node.level; i++, count++) {}
+        this.data.splice(index + 1, count);
+      }
+
+      // notify the change
+      this.dataChange.next(this.data);
+      node.isLoading = false;
+    }, 1000);
+  }
+}
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers : [DynamicDatabase]
 })
+
+
+
+
 export class AppComponent implements OnInit
 {
-  routeLinks : any[];
+  //Class Data
   activeLinkIndex = -1;
   persons :any;
   query : string;
-  name : string;
-  con : string;
-  year: string;
+  name:string;
+  type:string;
+  result : any[];
+  state : string;
+  title = 'map-app';
+  location :any[]= [];
+
+
+  //Autocomplete ArrayList
   filteredOptions: Observable<string[]>;
-  constructor(private router : Router,private route: ActivatedRoute, private http: HttpClient,private data : DataService)
+
+
+  constructor(private router : Router,private route: ActivatedRoute, private http: HttpClient,private data : DataService,database: DynamicDatabase)
   {
-    this.routeLinks = [
+    data.userDataSource.subscribe(res => {console.log(res);},err => {});
+    this.treeControl = new FlatTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
+    this.dataSource = new DynamicDataSource(this.treeControl, database);
+    this.dataSource.data = database.initialData();
+  }
+//treeview
+treeControl: FlatTreeControl<DynamicFlatNode>;
+dataSource: DynamicDataSource;
+getLevel = (node: DynamicFlatNode) => node.level;
+isExpandable = (node: DynamicFlatNode) => node.expandable;
+hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
+
+//routing wndow
+  routeLinks = [
             {
                 label: 'Gallery',
                 path: '/gallery',
@@ -41,47 +194,88 @@ export class AppComponent implements OnInit
                 index: 3
             }
           ]
-  }
-  title = 'map-app';
-  location :any[]= [];
-  pageForm = new FormGroup({
-    name: new FormControl(''),
-    con: new FormControl(''),
-    year: new FormControl('')
-  });
-  onSubmit()
+
+
+  //General Search Form Elements
+  generalForm = new FormGroup({ name: new FormControl(''), type: new FormControl('')});
+  //Taxonomical Search Elements
+  types = ["any","phylum","genus","family","order","species"];
+  //Spatial Search Form Elements
+  spatialForm = new FormGroup({state : new FormControl('')});
+  //SLider Form
+  sliderRange : number ;
+  someKeyboardConfig: any = {
+    connect: true,
+    start: [1857,1947],
+    step: 1,
+    range: {
+      min: 1761,
+      max: 2019
+    },
+    pips: {
+      mode: 'count',
+      density: 2,
+      values: 6,
+      stepped: true
+    },
+    behaviour: 'drag'
+  };
+
+  //form submit
+  onSubmit_general()
   {
-      this.name = this.pageForm.value.name;
-      this.con = this.pageForm.value.con;
-      this.year = this.pageForm.value.year;
-      if(this.name == "" && this.con == "" && this.year =="")
-        this.query="?";
-      else if(this.year == "" && this.name == "")
-        this.query="?con="+this.con;
-      else if(this.year == "" && this.con == "")
-        this.query="?name="+this.name;
-      else if(this.name == "" && this.con == "")
-        this.query="?year="+this.year;
-      else if(this.name == "")
-        this.query= "?con="+this.con+"&year="+this.year;
-      else if(this.con == "")
-        this.query= "?name="+this.name+"&year="+this.year;
-      else if(this.year == "")
-        this.query= "?con="+this.con+"&name="+this.name;
-      else
-          this.query="?name="+this.name+"&con="+this.con+"&year="+this.year;
-        console.log(this.query);
-        this.data.sendData(this.query);
-    }
+      this.name = this.generalForm.value['name'];
+      this.type = this.generalForm.value['type'];
+      console.log("?name="+this.name+"&type=?"+this.type);
+  }
+  onSubmit_spatial()
+  {
+      this.state = this.spatialForm.value['state'];
+      console.log("?state="+this.state);
+  }
+    /*onChange(value)
+    {
+        var temp = this.persons;
+        this.persons = [];
+        var start_date = value[0];
+        var end_date = value[1];
+        for(var i = 0;i<temp.length;i++)
+        {
+            if(temp[i].year >= start_date && temp[i].year <= end_date)
+            {
+              this.persons.push(temp[i]);
+            }
+        }
+    }*/
     ngOnInit()
     {
-      this.filteredOptions = this.pageForm.controls['con'].valueChanges.pipe(startWith(''),map(value => this._filter(value)));
+      this.filteredOptions = this.spatialForm.controls['state'].valueChanges.pipe(startWith(''),map(value => this._filter(value)));
     }
+
     private _filter(value: string): string[]
     {
       var filterValue = value.toLowerCase();
-      return this.countries.filter(country => country.toLowerCase().includes(filterValue));
+      return this.states_ut.filter(country => country.toLowerCase().includes(filterValue));
     }
+    /*change(event:any)
+    {
+      this.query = "/"+event[0]+"/"+event[1];
+      if(this.name == undefined || this.con == undefined)
+      {
+            this.name = "";
+            this.con = "";
+      }
+      if(this.name == "" && this.con == "")
+          this.query=this.query+"?";
+      else if(name == "")
+          this.query=this.query+"?con="+this.con;
+      else if(this.con == "")
+          this.query=this.query+"?name="+name;
+      else
+        this.query=this.query+"?name="+name+"&con="+this.con;
+      console.log(this.query);
+      this.data.sendData(this.query);
+    }*/
     //Country List (Do Not Modify)
-    countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+    states_ut = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Chandigarh","Dadra and Nagar Haveli","Daman and Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Orissa","Punjab","Pondicherry","Rajasthan","Sikkim","Tamil Nadu","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"];
 }

@@ -1,39 +1,8 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
- <div class="container-fluid" id="navfluid">
-   <div class="navbar-header">
-     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigationbar">
-       <span class="sr-only">Toggle navigation</span>
-       <span class="icon-bar"></span>
-       <span class="icon-bar"></span>
-       <span class="icon-bar"></span>
-     </button>
-     <a class="navbar-brand"  [routerLink] ="['/']">RRSC</a>
-   </div>
-   <div class="collapse navbar-collapse" id="navigationbar">
-      <ul class="nav navbar-nav">
-          <li><a>Search By Date</a></li>
-          <li><a>Filter By Date</a></li>
-          <li><a>Geotag Data</a></li>
-      </ul>
-   </div><!-- /.navbar-collapse -->
- </div><!-- /.container-fluid -->
-</nav>
-<div style="text-align:center;margin-top:25px;">
-  <h1>
-    Welcome to {{ title }} !
-  </h1>
-  <form [formGroup]="pageForm" class = "well form" (ngSubmit)="onSubmit()">
-      <input type="text" class="form-control input" formControlName="name" placeholder="Enter Name ">
-      <input type="text" class="form-control input" placeholder="Enter Country" matInput formControlName="con" [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let country of filteredOptions | async" [value]="country">{{country}}</mat-option>
-      </mat-autocomplete>
-      <input type="text" class="form-control input" formControlName="year" placeholder="Enter Year" >
-      <input type="submit" class="form-control input" style="visibility:hidden">
-  </form>
+  <!--div class="treeview" style="float:top;width:200px;height:200px;">
+  </div-->
   <div class="window">
-    <div class="menubar" style="position:relative">
+    <div class="menubar" style="position:fixed;background-color:black;top:0;z-index:9999;width:100%">
       <nav mat-tab-nav-bar>
         <a mat-tab-link class
         *ngFor="let link of routeLinks"
@@ -41,16 +10,90 @@
         routerLinkActive="mat-tab-link-active" #rla="routerLinkActive"
         [active]="rla.isActive"
         [routerLinkActiveOptions]="{exact: true}"
-        >
-        {{link.label}}
+        style="font-size:1.8rem;color:white">{{link.label}}
       </a>
       </nav>
     </div>
       <div class="result">
-          <router-outlet></router-outlet>
-      <div>
+          <router-outlet>
+            <mat-accordion class="form">
+              <mat-expansion-panel (opened)="Area = extent()" (closed)="Area = this.area">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Area
+                  </mat-panel-title>
+                  <mat-panel-description >
+                    {{Area}}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                Current Area : {{Area}}
+              </mat-expansion-panel>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    General Search
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form [formGroup] = "generalForm" (ngSubmit)="onSubmit_general()">
+                  <mat-radio-group class="example-radio-group" formControlName="type">
+                      <mat-radio-button class="example-radio-button" *ngFor="let type of types" [value]="type" style="font-weight:100;font-size:1.2rem">
+                          {{type}}
+                      </mat-radio-button>
+                  </mat-radio-group>
+                  <input type="text" class="form-control input" formControlName="name" placeholder="Enter Name">
+                  <input type="submit" style="visibility:hidden">
+                </form>
+              </mat-expansion-panel>
+              <mat-expansion-panel style="oveflow:auto">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Tree Search
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                    <button mat-icon-button disabled></button>
+                    {{node.item}}
+                  </mat-tree-node>
+                  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                    <button mat-icon-button matTreeNodeToggle
+                            [attr.aria-label]="'toggle ' + node.filename">
+                      <mat-icon>
+                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                      </mat-icon>
+                    </button>
+                    {{node.item}}
+                    <mat-progress-bar *ngIf="node.isLoading"
+                                      mode="indeterminate"
+                                      class="example-tree-progress-bar"></mat-progress-bar>
+                  </mat-tree-node>
+                </mat-tree>
+              </mat-expansion-panel>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Spatial Search
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form [formGroup]="spatialForm" (ngSubmit) = "onSubmit_spatial()">
+                  <input type="text" class="form-control input" formControlName="state" placeholder="Enter State" [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <input type="submit" style="visibility:hidden">
+                </form>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </router-outlet>
+      </div>
   </div>
-</div>
+  <div class="slider">
+    <div class="slider-in" style="width:95%;margin-left:35px;margin-top:15px;">
+      <nouislider #slider [config]="someKeyboardConfig" (change)="change($event)"></nouislider>
+    </div>
+  </div>
 <!--h2>Here are some links to help you start: </h2>
 <ul>\]7
 8i

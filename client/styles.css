@@ -1,5 +1,70 @@
 /* You can add global styles to this file, and also import other style files */
 @import "node_modules\\@angular\\material\\prebuilt-themes\\deeppurple-amber.css";
-a : hover{
-  cursor: pointer;
+@import "~nouislider/distribute/nouislider.min.css";
+body{
+  padding: 0px;
+  margin:0px;
+  background-color: black;
+  overflow: hidden;
+}
+.mat-ink-bar{
+  height:3px;
+  background-color: black;
+}
+.example-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-selected-value {
+  margin:0;
+}
+.slider{
+  z-index: 9999;
+  border-top:2px solid black;
+  background: white;
+  width: 100%;
+  margin-left:-15px;
+  margin-right: 10px;
+  height: 180px;
+  bottom: 0;
+  position:fixed;
+}
+.noUi-connects {
+            background: black!important;
+            height: 3px;
+}
+.noUi-connect {
+    background: orangered!important;
+    height:3px!important;
+}
+.noUi-base{
+  background: white!important;
+  height:2px;
+}
+.noUi-horizontal{
+  background: white;
+  height:2px;
+}
+.noUi-pips{
+  font-weight: bold;
+  color: black;
+}
+.noUi-handle {
+    height: 2em!important;
+    width: 2em!important;
+    top: -1em!important;
+    right: -1em!important;
+    border-radius: 100%;
+    background: #041128;
+    box-shadow: none;
+}
+.noUi-handle:before{
+    visibility: hidden;
+}
+.noUi-handle:after{
+    visibility: hidden;
 }
