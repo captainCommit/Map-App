@@ -1,5 +1,5 @@
 import { Component, OnInit,Injectable,EventEmitter,Input} from '@angular/core';
-import {FormGroup,FormControl,FormsModule} from '@angular/forms';
+import {FormGroup,FormControl} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router,RouterModule } from '@angular/router';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -17,6 +17,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { BehaviorSubject,merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {DataService} from './data.service';
+import { Validators } from '@angular/forms';
 //Tree View  Setup
 export class DynamicFlatNode {
   constructor(public item: string, public level = 1, public expandable = false,public state :string = "phylum",
@@ -155,11 +156,13 @@ export class AppComponent implements OnInit
   name:string;
   type:string;
   result : any[];
-  state : string;
   title = 'map-app';
   location :any[]= [];
-
-
+  //slider control
+  start = "1857"
+  end= "1947"
+  //spatial query
+  locality : string
   //Autocomplete ArrayList
   filteredOptions: Observable<string[]>;
 
@@ -197,7 +200,7 @@ hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
 
 
   //General Search Form Elements
-  generalForm = new FormGroup({ name: new FormControl(''), type: new FormControl('')});
+  generalForm = new FormGroup({ name: new FormControl('',Validators.required), type: new FormControl('')});
   //Taxonomical Search Elements
   types = ["any","phylum","genus","family","order","species"];
   //Spatial Search Form Elements
@@ -226,27 +229,71 @@ hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
   {
       this.name = this.generalForm.value['name'];
       this.type = this.generalForm.value['type'];
-      console.log("?name="+this.name+"&type=?"+this.type);
+      if(this.name == undefined)
+          this.name = "";
+      if(this.type == undefined)
+          this.type = "";
+      if(this.locality == undefined)
+          this.locality = "";
+      if(this.name=="" && this.type == "")
+          this.query="?";
+      else if(this.type == "")
+          this.query="?";
+      else if(this.name == "")
+          this.query="?";
+      else
+      {
+          this.query="?type="+this.type+"&name="+this.name;
+          if(this.type == "any")
+            this.query = "?name="+this.name+"&type="+this.type;
+          else
+            this.query = "?"+this.type+"="+this.name;
+      }
+      if(this.query == "?")
+          this.query = this.query+"start="+this.start+"&end="+this.end;
+      else
+          this.query = this.query+"&start="+this.start+"&end="+this.end;
+      if(this.locality == "")
+          this.query = this.query;
+      else
+          this.query = this.query+"&state="+this.locality;
+      console.log(this.query);
+      this.data.sendData(this.query);
   }
   onSubmit_spatial()
   {
-      this.state = this.spatialForm.value['state'];
-      console.log("?state="+this.state);
+      this.locality = this.spatialForm.value['state'];
+      if(this.locality == undefined)
+          this.locality="";
+      if(this.name == undefined)
+          this.name = "";
+      if(this.type == undefined)
+          this.type = "";
+      if(this.name=="" && this.type == "")
+          this.query="?";
+      else if(this.type == "")
+          this.query="?";
+      else if(this.name == "")
+          this.query="?";
+      else
+      {
+          this.query="?type="+this.type+"&name="+this.name;
+          if(this.type == "any")
+              this.query = "?name="+this.name+"&type="+this.type;
+          else
+              this.query = "?"+this.type+"="+this.name;
+      }
+      if(this.query == "?")
+          this.query = this.query+"start="+this.start+"&end="+this.end;
+      else
+          this.query = this.query+"&start="+this.start+"&end="+this.end;
+      if(this.locality == "")
+          this.query = this.query;
+      else
+          this.query = this.query+"&state="+this.locality;
+      console.log(this.query);
+      this.data.sendData(this.query);
   }
-    /*onChange(value)
-    {
-        var temp = this.persons;
-        this.persons = [];
-        var start_date = value[0];
-        var end_date = value[1];
-        for(var i = 0;i<temp.length;i++)
-        {
-            if(temp[i].year >= start_date && temp[i].year <= end_date)
-            {
-              this.persons.push(temp[i]);
-            }
-        }
-    }*/
     ngOnInit()
     {
       this.filteredOptions = this.spatialForm.controls['state'].valueChanges.pipe(startWith(''),map(value => this._filter(value)));
@@ -257,25 +304,41 @@ hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
       var filterValue = value.toLowerCase();
       return this.states_ut.filter(country => country.toLowerCase().includes(filterValue));
     }
-    /*change(event:any)
+    change(event:any)
     {
-      this.query = "/"+event[0]+"/"+event[1];
-      if(this.name == undefined || this.con == undefined)
-      {
+        this.start = event[0];
+        this.end = event[1];
+        if(this.name == undefined)
             this.name = "";
-            this.con = "";
-      }
-      if(this.name == "" && this.con == "")
-          this.query=this.query+"?";
-      else if(name == "")
-          this.query=this.query+"?con="+this.con;
-      else if(this.con == "")
-          this.query=this.query+"?name="+name;
-      else
-        this.query=this.query+"?name="+name+"&con="+this.con;
-      console.log(this.query);
-      this.data.sendData(this.query);
-    }*/
-    //Country List (Do Not Modify)
+        if(this.type == undefined)
+            this.type = "";
+        if(this.locality==undefined)
+            this.locality ="";
+        if(this.name=="" && this.type == "")
+            this.query="?";
+        else if(this.type == "")
+            this.query="?";
+        else if(this.name == "")
+            this.query="?";
+        else
+        {
+            this.query="?type="+this.type+"&name="+this.name;
+            if(this.type == "any")
+              this.query = "?name="+this.name+"&type="+this.type;
+            else
+              this.query = "?"+this.type+"="+this.name;
+        }
+        if(this.query == "?")
+            this.query = this.query+"start="+this.start+"&end="+this.end;
+        else
+            this.query = this.query+"&start="+this.start+"&end="+this.end;
+        if(this.locality == "")
+            this.query = this.query;
+        else
+            this.query = this.query+"&state="+this.locality;
+        console.log(this.query);
+        this.data.sendData(this.query);
+    }
+    //State  List (Do Not Modify)
     states_ut = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Chandigarh","Dadra and Nagar Haveli","Daman and Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Orissa","Punjab","Pondicherry","Rajasthan","Sikkim","Tamil Nadu","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"];
 }

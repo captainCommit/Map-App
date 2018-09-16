@@ -30,11 +30,13 @@
     "leaflet": "^1.3.4",
     "material-design-icons": "^3.0.1",
     "mongojs": "^2.6.0",
+    "mongoose": "^5.2.15",
     "ng2-nouislider": "^1.7.12",
     "ngx-rangeslider-component": "^1.0.6",
     "nouislider": "^11.1.0",
     "ol": "^5.2.0",
     "rxjs": "^6.0.0",
+    "validator": "^10.7.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

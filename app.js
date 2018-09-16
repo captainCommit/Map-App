@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
-var mongo = require('mongojs');
 var tasks = require('./route/routes');
 var app = express();
 
@@ -13,8 +12,6 @@ app.engine('html', require('ejs').renderFile);
 // Set Static Folder
 app.use(express.static('./dist'));
 app.use('/', express.static(path.resolve('dist/index.html')));
-
-var db = mongo('mongodb://localhost/mapdb', ['data']);
 // Body Parser MW
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

@@ -2,6 +2,7 @@ import { Component,OnInit} from '@angular/core';
 import {FormGroup,FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import {fauna} from '../../../Fauna/fauna';
 import L from "leaflet";
 
 import { DataService } from "../data.service";
@@ -18,16 +19,15 @@ var markers = new Array();
 })
 export class PageComponent implements OnInit
 {
-  //map data
   //person arrau
-  persons: any;
+  faunaData: any;
   result :any[]= [];
   constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient,private data : DataService)
   {
     this.data.userDataSource.subscribe(res => {
-      this.persons = res
+      this.faunaData = res
     },err =>{console.log(err)})
-    console.log(this.persons);
+    console.log(this.faunaData);
   }
   ngOnInit()
   {

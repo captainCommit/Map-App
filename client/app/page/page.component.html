@@ -4,18 +4,15 @@
     <input type="text" class="form-control input" formControlName="year" placeholder="Enter Year" >
     <input type="submit" class="form-control input" style="visibility:hidden">
 </form-->
-<div class="card bg-info result-data " *ngFor = "let person of persons">
-  <div class="view-overlay">
-    <a href="assets\img\AVATAR.png" target="_blank"><img class="card-img-top bordered img-thumbnail img-responsive" src="assets\img\AVATAR.png" height=200 width=180 style="margin:10px;" alt="Card image cap"></a>
-  </div>
-  <div class="card-body">
-    <h4 class="card-title"><strong>{{person.name}}</strong></h4>
-    <p class="card-text">
-      Year : {{person.year}} &nbsp;&nbsp;&nbsp;&nbsp;
-      <br>Country : {{person.con}}
-      <br>Location : ({{person.lat}}&nbsp;,&nbsp;{{person.long}})
-      <br><a>View In Map</a>
-    </p>
-    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-  </div>
+<div class="card-area">
+    <div class="card mb-4 result" *ngFor="let fauna of faunaData">
+      <a href="assets\img\AVATAR.png" target="_blank"><img class="card-img-top bordered img-thumbnail img-responsive" src="assets\img\AVATAR.png" height=200 width=180 style="margin:10px;" alt="Card image cap"></a>
+        <div class="card-body">
+          <h5 class="card-title" style="font-weigt:bold;font-size:2rem">{{fauna.species}}</h5>
+            <p class="card-text">Location : ({{fauna.latitude}},{{fauna.longitude}})
+            Discovered By : {{fauna.collected}}
+            Identified By : {{fauna.identified}}</p>
+            <a class="btn btn-outline-light btn-sm">Go somewhere</a>
+          </div>
+    </div>
 </div>
