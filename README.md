@@ -31,7 +31,7 @@ Open Browser at http://localhost:3000/
 1. Map is not Completely Dynamic
 2. There is a commented out tree search in the app.component.html (Can't Implement it.... Help is needed)
 
-##TODO
+## TODO
 1. Chart Implementation in Future Versions(Species Count)
 2. Different markers showing different intensity of occurrences
 3. Proper implementation of tree view
