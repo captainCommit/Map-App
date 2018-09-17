@@ -26,12 +26,7 @@ import {TextComponent} from './text/text.component';
 import {DataService} from './data.service';
 const appRoutes: Routes = [
   {
-    path:'',
-    component:TextComponent,
-    data: {title: 'Map-App'}
-  },
-  {
-    path: 'gallery',
+    path: '',
     component: PageComponent,
     data: { title: 'Map-App' }
   },

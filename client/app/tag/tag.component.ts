@@ -69,7 +69,6 @@ export class TagComponent implements OnInit {
   }
   ngOnInit()
   {}
-   //Add Marker to map
   buildmap()
   {
     mymap = L.map('mapid').setView([0,0], 1);

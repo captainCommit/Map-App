@@ -1,15 +1,15 @@
 .result{
   text-align: center;
   color:white;
-  font-weight: bold;
+  font-weight: 200;
   font-size: 1.5rem;
-  width:200px;
-  height:400px;
+  width:240px;
+  height:380px;
   float:left;
-  margin-left:20px;
-  margin-right:20px;
-  margin-bottom: 20px;
-  margin-top:35px;
+  margin-left:25px;
+  margin-right:25px;
+  margin-bottom: 15px;
+  margin-top:5px;
   -webkit-box-shadow: 10px 10px 44px -2px rgba(237,133,237,0.99);
   -moz-box-shadow: 10px 10px 44px -2px rgba(237,133,237,0.99);
   box-shadow: 10px 10px 44px -2px rgba(237,133,237,0.99);
@@ -20,7 +20,7 @@
   float:left;
   overflow: auto;
   margin-left:9px;
-  width:80%;
+  width:70%;
   height:63vh;
   right:5%;
 }

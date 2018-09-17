@@ -1,1 +1,2 @@
-<div id="mapid" leaflet [leafletOptions]="options" (leafletMapZoomEnd)="onChange($event)" (leafletMapMoveEnd)="onChange($event)"></div>
+<div class="map" leaflet id="mapid" [leafletOptions]="options" [leafletLayers]="layers"  (leafletMapReady)="onMapReady($event)" (leafletMapZoomEnd)="change($event)" (leafletMapMoveEnd)="change($event)">
+</div>

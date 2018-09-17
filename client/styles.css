@@ -18,7 +18,10 @@ body{
 .example-radio-button {
   margin: 5px;
 }
-
+.leaflet-control-layers-toggle {
+  top:25%;
+  width:44px!important;
+}
 .example-selected-value {
   margin:0;
 }

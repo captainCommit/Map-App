@@ -17,16 +17,16 @@
       <div class="result">
           <router-outlet>
             <mat-accordion class="form">
-              <mat-expansion-panel (opened)="Area = extent()" (closed)="Area = this.area">
+              <mat-expansion-panel>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
                     Area
                   </mat-panel-title>
                   <mat-panel-description >
-                    {{Area}}
+                    (million sq. km)
                   </mat-panel-description>
                 </mat-expansion-panel-header>
-                Current Area : {{Area}}
+                Current Area : {{this.area.toFixed(5)}}
               </mat-expansion-panel>
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -44,13 +44,13 @@
                   <input type="submit" style="visibility:hidden">
                 </form>
               </mat-expansion-panel>
-              <mat-expansion-panel style="oveflow:auto">
+              <mat-expansion-panel >
                 <mat-expansion-panel-header>
                   <mat-panel-title>
                     Tree Search
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" style="oveflow:auto;max-height:250px;">
                   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
                     <button mat-icon-button disabled></button>
                     {{node.item}}
