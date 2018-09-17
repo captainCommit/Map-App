@@ -16,7 +16,7 @@ This project will also have mobile version.
 The map used in the application is Leaflet version - latest at the time of development of application
 
 ## Data File
-DataSep3-2018.json
+data.json
 
 ## Import Database
 mongoimport --jsonArray --db mapdb --collection data --file <path to filename>
@@ -26,3 +26,12 @@ Open Browser at http://localhost:3000/
 
 1.  RUN NPM INSTALL
 2.  RUN NPM START
+
+## Issues
+1. Map is not Completely Dynamic
+2. There is a commented out tree search in the app.component.html (Can't Implement it.... Help is needed)
+
+##TODO
+1. Chart Implementation in Future Versions(Species Count)
+2. Different markers showing different intensity of occurrences
+3. Proper implementation of tree view
