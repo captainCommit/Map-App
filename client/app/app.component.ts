@@ -13,81 +13,55 @@ import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-
 import { BehaviorSubject,merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {DataService} from './data.service';
 import { Validators } from '@angular/forms';
 //Tree View  Setup
 export class DynamicFlatNode {
-  public next:string
-  public http:HttpClient;
-  constructor(public item: string, public level = 1, public expandable = false,public hierarchy :string = "phylum",public isLoading = false)
-  {
-      this.findNext();
-  }
-  findNext()
-  {
-    if(this.hierarchy == "phylum")
-          this.next = "classes"
-    else if(this.hierarchy == "classes")
-          this.next = "orders";
-    else if(this.hierarchy == "orders")
-          this.next ="family"
-    else if(this.hierarchy == "family")
-          this.next = "genus"
-    else if(this.hierarchy == "genus")
-          this.next = "subgenus"
-    else if(this.hierarchy == "subgenus")
-          this.next = "speices"
-    else if(this.hierarchy == "species")
-          this.next = "subspeices"
-    else
-          this.next="";
-  }
-  isExpandable() : boolean
-  {
-        var value = false;
-        this.http.get('/buildtree/'+this.next+"?"+this.hierarchy+"="+this.item).subscribe(res => {
-          if(res.toString().length > 0)
-                value = true;
-          else
-                  value = false;
-        })
-        return value;
-  }
-}
-export class DynamicDatabase
-{
-    rootLevelNodes: string[] = ["Mollusca","Cnidaria","Chordata","Arthropoda","Echinodermata","Cindaria","Porifera","Cnindaria","Platyhelminthes"];
-    dataMap = new Map([
-          ['Mollusca', ["Gastropoda","Bivalvia","Cephalopoda"]],
-          ['Cnidaria', ["Zoantharia","Actiniaria","Scleractinia","Semaeostomeae","Rhizostomeae","Anthoathecata","Gorgonacea","Antipatharia"]],
-          ['Chordata', ["Pleurogona","Enterogona","Suliformes","Passeriformes","Anseriformes","Gruiformes","Rodentia","Squamata","Anura","Ciconiiformes","Columbiformes","Coraciformes","Perciformes","Aplousobranchia","Phelbobranchia","Stolidobranchia","Charadriiformes","Apodiformes","Chiroptera","Anguilliformes","Ophidiformes"]],
-          ['Arthropoda',["Lepidoptera","Hymenoptera","Diptera","Decapoda","Odonata","Hemiptera","Anomura","Araneae","Calanoida","Scorpiones","Isopoda"]],
-          ['Echinodermata',["Aspidochirotida","Apodida","Valvatida"]],
-          ['Cindaria',["Scleractinia","Anthoathecat"]],
-          ['Porifera',["Poeciloscerida","Haplosclerida","Dictyoceratida","Halichondrida","Spirophorida"]],
-          ['Cnindaria',["Scleractinia","Actiniaria","Semaeostomeae","Anthoathecata"]],
-          ['Platyhelminthes',["Polycladida","Polycladidia"]],
-          ['Gastropoda',["Archaeogastropoda",'Mesogastropoda','Neogastropoda','Nudibranchia','Cephalaspedia','Littorinimorpha','Systellommatophora','Caenogastropoda','Cephalaspidea','Cycloneritimorpha','','Sacoglossa','Neoloricata','Archaeopulmonata','Architectonoidea','Basommatophora','Acteonoidea','Littorinamorpha','Notaspedia']],
-          ['Bivalvia',["Veneroida","Limoida","Pterioda","Arcoida","Mytiloida","Euheterodonta","Pectinoida"]],
-          ['Cephalopoda',[ "Cephalaspidea", "Spirulida", "Octopoda" ]]
-        ]);
-      //Initial data from database
-      initialData(): DynamicFlatNode[] {
-        return this.rootLevelNodes.map(name => new DynamicFlatNode(name, 0, true));
-      }
-
-      getChildren(node: string): string[] | undefined {
-        return this.dataMap.get(node);
-      }
-
-      isExpandable(node: string): boolean {
-        return this.dataMap.has(node);
-      }
+  constructor(public item: string, public level = 1, public expandable = false,
+              public isLoading = false) {}
 }
 
+/**
+ * Database for dynamic data. When expanding a node in the tree, the data source will need to fetch
+ * the descendants data from the database.
+ */
+export class DynamicDatabase {
+  dataMap = new Map([
+        ['Mollusca', ["Gastropoda","Bivalvia","Cephalopoda"]],
+        ['Cnidaria', ["Zoantharia","Actiniaria","Scleractinia","Semaeostomeae","Rhizostomeae","Anthoathecata","Gorgonacea","Antipatharia"]],
+        ['Chordata', ["Pleurogona","Enterogona","Suliformes","Passeriformes","Anseriformes","Gruiformes","Rodentia","Squamata","Anura","Ciconiiformes","Columbiformes","Coraciformes","Perciformes","Aplousobranchia","Phelbobranchia","Stolidobranchia","Charadriiformes","Apodiformes","Chiroptera","Anguilliformes","Ophidiformes"]],
+        ['Arthropoda',["Lepidoptera","Hymenoptera","Diptera","Decapoda","Odonata","Hemiptera","Anomura","Araneae","Calanoida","Scorpiones","Isopoda"]],
+        ['Echinodermata',["Aspidochirotida","Apodida","Valvatida"]],
+        ['Cindaria',["Scleractinia","Anthoathecat"]],
+        ['Porifera',["Poeciloscerida","Haplosclerida","Dictyoceratida","Halichondrida","Spirophorida"]],
+        ['Cnindaria',["Scleractinia","Actiniaria","Semaeostomeae","Anthoathecata"]],
+        ['Platyhelminthes',["Polycladida","Polycladidia"]]
+      ]);
+
+  rootLevelNodes: string[] = ['Mollusca','Cnidaria','Chordata','Arthropoda','Echinodermata','Cindaria','Porifera','Cnindaria','Platyhelminthes'];
+
+  /** Initial data from database */
+  initialData(): DynamicFlatNode[] {
+    return this.rootLevelNodes.map(name => new DynamicFlatNode(name, 0, true));
+  }
+
+  getChildren(node: string): string[] | undefined {
+    return this.dataMap.get(node);
+  }
+
+  isExpandable(node: string): boolean {
+    return this.dataMap.has(node);
+  }
+}
+/**
+ * File database, it can build a tree structured Json object from string.
+ * Each node in Json object represents a file or a directory. For a file, it has filename and type.
+ * For a directory, it has filename and children (a list of files or directories).
+ * The input will be a json object string, and the output is a list of `FileNode` with nested
+ * structure.
+ */
 @Injectable()
 export class DynamicDataSource {
 
@@ -113,7 +87,7 @@ export class DynamicDataSource {
     return merge(collectionViewer.viewChange, this.dataChange).pipe(map(() => this.data));
   }
 
-  /** Handle expand/collapse behaviors*/
+  /** Handle expand/collapse behaviors */
   handleTreeControl(change: SelectionChange<DynamicFlatNode>) {
     if (change.added) {
       change.added.forEach(node => this.toggleNode(node, true));
@@ -123,8 +97,9 @@ export class DynamicDataSource {
     }
   }
 
-  /*Toggle the node, remove from display list*/
-
+  /**
+   * Toggle the node, remove from display list
+   */
   toggleNode(node: DynamicFlatNode, expand: boolean) {
     const children = this.database.getChildren(node.item);
     const index = this.data.indexOf(node);
@@ -152,7 +127,6 @@ export class DynamicDataSource {
     }, 1000);
   }
 }
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -186,7 +160,6 @@ export class AppComponent implements OnInit
 
   constructor(private router : Router,private route: ActivatedRoute, private http: HttpClient,private data : DataService,database: DynamicDatabase)
   {
-    data.changeTab.subscribe(res => this.activeLinkIndex = res);
     data.userDataSource.subscribe(res => {console.log(res);},err => {});
     data.areaSource.subscribe(res => {this.area = res; console.log(res);},err => {console.log(err);})
     this.treeControl = new FlatTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
@@ -194,7 +167,6 @@ export class AppComponent implements OnInit
     this.dataSource.data = database.initialData();
   }
 //treeview
-node = new DynamicFlatNode("Mollusca",0,true,"phylum",false)
 treeControl: FlatTreeControl<DynamicFlatNode>;
 dataSource: DynamicDataSource;
 getLevel = (node: DynamicFlatNode) => node.level;
@@ -279,7 +251,6 @@ hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
           this.query = this.query+"&state="+this.locality;
       console.log(this.query);
       this.data.sendData(this.query);
-      this.activeLinkIndex = -1;
   }
   onSubmit_spatial()
   {
@@ -314,7 +285,6 @@ hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
           this.query = this.query+"&state="+this.locality;
       console.log(this.query);
       this.data.sendData(this.query);
-      this.activeLinkIndex = -1;
   }
     ngOnInit()
     {
@@ -360,7 +330,6 @@ hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
             this.query = this.query+"&state="+this.locality;
         console.log(this.query);
         this.data.sendData(this.query);
-        this.activeLinkIndex = -1;
     }
     //State  List (Do Not Modify)
     states_ut = ["Andhra Pradesh","Andaman and Nicobar Islands","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Chandigarh","Dadra and Nagar Haveli","Daman and Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Orissa","Punjab","Pondicherry","Rajasthan","Sikkim","Tamil Nadu","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"];

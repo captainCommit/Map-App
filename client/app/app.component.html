@@ -44,31 +44,6 @@
                   <input type="submit" style="visibility:hidden">
                 </form>
               </mat-expansion-panel>
-              <!--mat-expansion-panel >
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    Tree Search
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" style="oveflow:auto;max-height:250px;">
-                  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-                    <button mat-icon-button disabled></button>
-                    {{node.item}}
-                  </mat-tree-node>
-                  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-                    <button mat-icon-button matTreeNodeToggle
-                            [attr.aria-label]="'toggle ' + node.filename">
-                      <mat-icon>
-                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                      </mat-icon>
-                    </button>
-                    {{node.item}}
-                    <mat-progress-bar *ngIf="node.isLoading"
-                                      mode="indeterminate"
-                                      class="example-tree-progress-bar"></mat-progress-bar>
-                  </mat-tree-node>
-                </mat-tree>
-              </mat-expansion-panel-->
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
@@ -85,14 +60,39 @@
                   <input type="submit" style="visibility:hidden">
                 </form>
               </mat-expansion-panel>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Tree Search
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" style="z-index:99999">
+                  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                    <button mat-icon-button disabled></button>
+                    <a (click)="this.data.onClick(node.item,'classes',this.start,this.end)">{{node.item}}</a>
+                  </mat-tree-node>
+                  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                    <button mat-icon-button
+                            [attr.aria-label]="'toggle ' + node.filename" matTreeNodeToggle>
+                      <mat-icon class="mat-icon-rtl-mirror">
+                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                      </mat-icon>
+                    </button>
+                    <a (click)="this.data.onClick(node.item,'phylum',this.start,this.end)">{{node.item}}</a>
+                    <mat-progress-bar *ngIf="node.isLoading"
+                                      mode="indeterminate"
+                                      class="example-tree-progress-bar"></mat-progress-bar>
+                  </mat-tree-node>
+                </mat-tree>
+              </mat-expansion-panel>
             </mat-accordion>
           </router-outlet>
       </div>
-  </div>
-  <div class="slider">
-    <div class="slider-in" style="width:95%;margin-left:35px;margin-top:15px;">
-      <nouislider #slider [config]="someKeyboardConfig" (change)="change($event)"></nouislider>
-    </div>
+      <div class="slider">
+        <div class="slider-in" style="width:95%;margin-left:35px;margin-top:15px;">
+          <nouislider #slider [config]="someKeyboardConfig" (change)="change($event)"></nouislider>
+        </div>
+      </div>
   </div>
 <!--h2>Here are some links to help you start: </h2>
 <ul>\]7

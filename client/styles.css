@@ -5,7 +5,8 @@ body{
   padding: 0px;
   margin:0px;
   background-color: black;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .mat-ink-bar{
   height:3px;
@@ -26,11 +27,11 @@ body{
   margin:0;
 }
 .slider{
-  z-index: 9999;
+  z-index: 999;
   border-top:2px solid black;
   background: white;
   width: 100%;
-  margin-left:-15px;
+  margin-left:0px;
   margin-right: 10px;
   height: 180px;
   bottom: 0;

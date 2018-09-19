@@ -5,6 +5,14 @@ a : hover{
   cursor: pointer;
   text-decoration: none;
 }
+.tree{
+  margin-top:120px;
+  left:1%;
+  margin-left:-5px;
+  position: fixed;
+  width:250px;
+  z-index:9999;
+}
 .form{
   position:absolute;
   right:1%;
@@ -44,6 +52,9 @@ a:hover{
 #mapid{
   width:900px;
   height:500px;
+}
+#chartContainer{
+  height:150px;
 }
 .nav-class{
   background : black;

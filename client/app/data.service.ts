@@ -10,7 +10,6 @@ export class DataService {
   area: number;
   userDataSource: BehaviorSubject<{}> = new BehaviorSubject({});
   areaSource : BehaviorSubject<Number> = new BehaviorSubject(0);
-  changeTab : BehaviorSubject<number> = new BehaviorSubject(-1);
   data = this.userDataSource.asObservable();
   response : any;
   query ="?";
@@ -30,6 +29,33 @@ export class DataService {
       });
     console.log("Data Sent");
   }
+  onClick(name : string, type : string, start : number,end:number)
+  {
+    var query ="";
+    if(name == undefined)
+        name = "";
+    if(type == undefined)
+        type = "";
+    if(name=="" && type == "")
+        query="?";
+    else if(type == "")
+        query="?";
+    else if(name == "")
+        query="?";
+    else
+    {
+        query="?type="+type+"&name="+name;
+        if(type == "any")
+          query = "?name="+name+"&type="+type;
+        else
+          query = "?"+type+"="+name;
+    }
+    if(query == "?")
+        query = query+"start="+start+"&end="+end;
+    else
+        query = query+"&start="+start+"&end="+end;
+    this.sendData(query);
+  }
   filterdata(bounds : any)
   {
         var upper_lng = bounds._northEast.lng;
@@ -43,10 +69,6 @@ export class DataService {
           },err => {
             console.log(err);
           })
-  }
-  Onchange()
-  {
-      this.changeTab.next(-1);
   }
   calcarea(bounds : any)
   {

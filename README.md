@@ -35,3 +35,7 @@ Open Browser at http://localhost:3000/
 1. Chart Implementation in Future Versions(Species Count)
 2. Different markers showing different intensity of occurrences
 3. Proper implementation of tree view
+
+
+## Update 0.0.1
+1. Implemnted tree based search on classes and phylums
