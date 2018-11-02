@@ -33,4 +33,5 @@ var faunaSchema = new Schema(
     geom       :   {type : String}
   },{collection : 'finaldata'}
 );
+faunaSchema.index({'$**': 'text'});
 module.exports = mongoose.model('fauna',faunaSchema);

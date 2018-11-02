@@ -15,6 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { BehaviorSubject,merge, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import * as CanvasJS from './canvasjs.min';
 import {DataService} from './data.service';
 import { Validators } from '@angular/forms';
 //Tree View  Setup
@@ -27,6 +28,17 @@ export class DynamicFlatNode {
  * Database for dynamic data. When expanding a node in the tree, the data source will need to fetch
  * the descendants data from the database.
  */
+ let dataPoints = [
+ 			{ y: 71 },
+ 			{ y: 55 },
+ 			{ y: 50 },
+ 			{ y: 65 },
+ 			{ y: 95 },
+ 			{ y: 68 },
+ 			{ y: 28 },
+ 			{ y: 34 },
+ 			{ y: 14 }
+ 		]; /// can be changed according to user needs
 export class DynamicDatabase {
   dataMap = new Map([
         ['Mollusca', ["Gastropoda","Bivalvia","Cephalopoda"]],
@@ -289,6 +301,14 @@ hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
     ngOnInit()
     {
       this.filteredOptions = this.spatialForm.controls['state'].valueChanges.pipe(startWith(''),map(value => this._filter(value)));
+      let chart = new CanvasJS.Chart("chartContainer",{
+			animationEnabled: true,
+			data: [{
+				type: "line",
+				dataPoints : dataPoints
+			}]
+		});
+		chart.render();
     }
 
     private _filter(value: string): string[]

@@ -47,22 +47,6 @@
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
-                    Spatial Search
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                <form [formGroup]="spatialForm" (ngSubmit) = "onSubmit_spatial()">
-                  <input type="text" class="form-control input" formControlName="state" placeholder="Enter State" [matAutocomplete]="auto">
-                  <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                        {{option}}
-                    </mat-option>
-                  </mat-autocomplete>
-                  <input type="submit" style="visibility:hidden">
-                </form>
-              </mat-expansion-panel>
-              <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
                     Tree Search
                   </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -85,12 +69,29 @@
                   </mat-tree-node>
                 </mat-tree>
               </mat-expansion-panel>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Spatial Search
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form [formGroup]="spatialForm" (ngSubmit) = "onSubmit_spatial()">
+                  <input type="text" class="form-control input" formControlName="state" placeholder="Enter State" [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <input type="submit" style="visibility:hidden">
+                </form>
+              </mat-expansion-panel>
             </mat-accordion>
           </router-outlet>
       </div>
-      <div class="slider">
+      <div class="bottom" style="overflow:auto">
         <div class="slider-in" style="width:95%;margin-left:35px;margin-top:15px;">
           <nouislider #slider [config]="someKeyboardConfig" (change)="change($event)"></nouislider>
+          <div id="chartContainer" style="margin-top:50px;height:200px;width:100%;margin-left:5px;margin-right:5px"></div>
         </div>
       </div>
   </div>

@@ -37,6 +37,7 @@
     "nouislider": "^11.1.0",
     "ol": "^5.2.0",
     "rxjs": "^6.0.0",
+    "serve-favicon": "^2.5.0",
     "validator": "^10.7.1",
     "zone.js": "~0.8.26"
   },
