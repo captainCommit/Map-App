@@ -1,4 +1,4 @@
-# MapApp
+# Map-App
 A lightweight application on the Mean Stack to view spatial and temporal variations of fauna all over India.
 
 ## Development server for UI (Angular)
@@ -13,7 +13,12 @@ data about the data collected in the wild by researchers. Moreover future update
 This project will also have mobile version.
 
 ## Requirements
-The map used in the application is Leaflet version - latest at the time of development of application
+
+Node version - 8.12.0
+MongoDB version - v4.0.2
+Leaflet - 1.3.4
+Follow installation docs to install the above mentioned software
+The map used in the application is LeafletJS latest at the time of development of application
 
 ## Data File
 data.json
@@ -29,13 +34,19 @@ Open Browser at http://localhost:3000/
 
 ## Issues
 1. Map is not Completely Dynamic
-2. There is a commented out tree search in the app.component.html (Can't Implement it.... Help is needed)
+2. Although Chart is implemented the data till now is static, we need to add a count service to change the data of the chart dynamically, but it does not seem to work in canvasjs.
 
 ## TODO
-1. Chart Implementation in Future Versions(Species Count)
-2. Different markers showing different intensity of occurrences
-3. Proper implementation of tree view
-
+1. Different markers showing different intensity of occurrences
+2. Layer control option to be added
 
 ## Update 0.0.1
 1. Implemnted tree based search on classes and phylums
+
+## Update 0.0.2
+1. Added static chart at the slider in bottom
+
+## Problem
+The map api used is Open street maps. The Bhuvan API is not linking with the current versions
+The map container using leaflet does not allow dynamic re rendering when data is changed.
+The container API used in the model website is a paid one called mapbox, So we cannot use it
